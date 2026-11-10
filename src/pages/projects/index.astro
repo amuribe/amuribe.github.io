@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectEntry from '../../components/ProjectEntry.astro';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.start.valueOf() - a.data.start.valueOf(),
+);
+
+// Group by start year, newest first, like a publication list
+const years = [...new Set(projects.map((p) => p.data.start.getUTCFullYear()))];
+---
+
+<Base title="Projects" description="Software projects by Alex McPherson Uribe.">
+  <header class="page-header">
+    <h1>Projects</h1>
+    <p class="dek">Most of these started as excuses to spend more time on something I love.</p>
+  </header>
+
+  {
+    years.map((year) => (
+      <section aria-labelledby={`y${year}`} class="year">
+        <h2 id={`y${year}`} class="year-label">{year}</h2>
+        {projects
+          .filter((p) => p.data.start.getUTCFullYear() === year)
+          .map((entry) => (
+            <ProjectEntry entry={entry} />
+          ))}
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .page-header {
+    max-width: var(--measure);
+  }
+  h1 {
+    margin-bottom: var(--space-2xs);
+  }
+  .dek {
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: var(--space-xl);
+  }
+  .year + .year {
+    margin-top: var(--space-xl);
+  }
+  .year-label {
+    font-size: var(--step-0);
+    font-weight: 400;
+    font-variant-numeric: lining-nums tabular-nums;
+    color: var(--muted);
+    max-width: var(--measure);
+    padding-bottom: var(--space-3xs);
+    margin-bottom: var(--space-m);
+    border-bottom: var(--rule-width) solid var(--rule);
+  }
+</style>

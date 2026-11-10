@@ -1,0 +1,57 @@
+---
+/** One project in a list, styled like an entry in a publication list. */
+import type { CollectionEntry } from 'astro:content';
+import { formatRange, isoDate } from '../lib/dates';
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  headingLevel?: 'h2' | 'h3';
+}
+const { entry, headingLevel: H = 'h3' } = Astro.props;
+const { title, abstract, start, end, stack, source, demo } = entry.data;
+const href = `/projects/${entry.id}/`;
+---
+
+<article class="entry">
+  <H class="title"><a href={href}>{title}</a></H>
+  <p class="meta">
+    <time datetime={isoDate(start)}>{formatRange(start, end)}</time>
+    <span aria-hidden="true"> · </span>{stack.join(', ')}
+  </p>
+  <p class="abstract">{abstract}</p>
+  <p class="links">
+    <a href={href}>Read more<span class="visually-hidden"> about {title}</span></a>
+    {demo && <><span aria-hidden="true" class="muted"> · </span><a href={demo}>Live demo</a></>}
+    {source && <><span aria-hidden="true" class="muted"> · </span><a href={source}>Source</a></>}
+  </p>
+</article>
+
+<style>
+  .entry {
+    max-width: var(--measure);
+  }
+  .entry + :global(.entry) {
+    margin-top: var(--space-l);
+  }
+  .title {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-3xs);
+  }
+  .title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .title a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .meta {
+    margin-bottom: var(--space-2xs);
+  }
+  .abstract {
+    margin-bottom: var(--space-2xs);
+  }
+  .links {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import Currently from '../components/Currently.astro';
+import ProjectEntry from '../components/ProjectEntry.astro';
+import { SITE } from '../site';
+
+const featured = (
+  await getCollection('projects', ({ data }) => data.featured && !data.draft)
+).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base>
+  <section class="intro">
+    <h1>{SITE.author}</h1>
+    <p class="statement">
+      I'm a computer science co-op student who builds software around the things I love. So far
+      that's a music-theory engine for string instruments and a way to log the films I watch. I'm always
+      learning something new, and I'm happy to talk about almost anything.
+    </p>
+    <Currently />
+  </section>
+
+  {
+    featured.length > 0 && (
+      <section aria-labelledby="work">
+        <h2 id="work" class="section-label label">Selected work</h2>
+        {featured.map((entry) => (
+          <ProjectEntry entry={entry} />
+        ))}
+        <p class="all"><a href="/projects/">All projects</a></p>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .intro {
+    max-width: var(--measure);
+    margin-bottom: var(--space-2xl);
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: var(--space-xs);
+  }
+  .statement {
+    font-size: var(--step-1);
+    line-height: 1.45;
+    margin-bottom: var(--space-m);
+  }
+  .all {
+    margin-top: var(--space-l);
+  }
+  .section-label {
+    font-size: var(--step-1);
+    font-weight: 400;
+    padding-bottom: var(--space-2xs);
+    margin-bottom: var(--space-s);
+    border-bottom: var(--rule-width) solid var(--rule);
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPosts } from '../../lib/content';
+import { formatDate, isoDate } from '../../lib/dates';
+
+const posts = await getPosts();
+---
+
+<Base title="Writing" description="Writing by Alex McPherson Uribe on software, music, film, and whatever else.">
+  <header class="page-header">
+    <h1>Writing</h1>
+    <p class="dek">On software, music, film, and whatever else I can't stop thinking about.</p>
+  </header>
+
+  {
+    posts.length === 0 ? (
+      <p class="muted">Nothing here yet.</p>
+    ) : (
+      <ol class="posts">
+        {posts.map((post) => (
+          <li>
+            <time class="meta" datetime={isoDate(post.data.date)}>
+              {formatDate(post.data.date)}
+            </time>
+            <div>
+              <h2>
+                <a href={`/writing/${post.id}/`}>{post.data.title}</a>
+                {post.data.draft && <span class="draft meta"> (draft)</span>}
+              </h2>
+              <p>{post.data.summary}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+</Base>
+
+<style>
+  .page-header {
+    max-width: var(--measure);
+  }
+  h1 {
+    margin-bottom: var(--space-2xs);
+  }
+  .dek {
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: var(--space-xl);
+  }
+  .posts {
+    list-style: none;
+    padding: 0;
+    max-width: var(--measure);
+  }
+  .posts > li {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: var(--space-s);
+    padding-block: var(--space-s);
+    border-top: var(--rule-width) solid var(--rule);
+  }
+  .posts > li + li {
+    margin-top: 0;
+  }
+  time {
+    font-variant-numeric: lining-nums tabular-nums;
+    padding-top: 0.15em;
+  }
+  h2 {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-3xs);
+  }
+  h2 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  h2 a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .posts p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .draft {
+    font-size: var(--step--1);
+  }
+  @media (max-width: 36rem) {
+    .posts > li {
+      grid-template-columns: 1fr;
+      gap: var(--space-3xs);
+    }
+  }
+</style>

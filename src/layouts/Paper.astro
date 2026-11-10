@@ -1,0 +1,108 @@
+---
+/**
+ * Project page, laid out like a short paper:
+ * title → byline → links → abstract → body (with figures and footnotes).
+ * See docs/brand-brief.md §4.
+ */
+import type { CollectionEntry } from 'astro:content';
+import Base from './Base.astro';
+import { formatRange, isoDate } from '../lib/dates';
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+}
+const { title, abstract, start, end, role, stack, demo, source } = Astro.props.entry.data;
+---
+
+<Base title={title} description={abstract}>
+  <article class="paper">
+    <header class="paper-header">
+      <p class="kicker label"><a href="/projects/">Projects</a></p>
+      <h1>{title}</h1>
+      <p class="byline meta">
+        <time datetime={isoDate(start)}>{formatRange(start, end)}</time>
+        <span aria-hidden="true"> · </span>{role}
+        <span aria-hidden="true"> · </span>{stack.join(', ')}
+      </p>
+      {
+        (demo || source) && (
+          <p class="links">
+            {demo && <a href={demo}>Live demo</a>}
+            {demo && source && <span aria-hidden="true" class="muted"> · </span>}
+            {source && <a href={source}>Source code</a>}
+          </p>
+        )
+      }
+    </header>
+
+    <section class="abstract" aria-label="Abstract">
+      <p class="label">Abstract</p>
+      <p>{abstract}</p>
+    </section>
+
+    <div class="prose body">
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .paper {
+    /* figure numbers: Fig. 1, Fig. 2, … */
+    counter-reset: figure;
+  }
+  .paper-header,
+  .abstract {
+    max-width: var(--measure);
+  }
+  .kicker {
+    margin-bottom: var(--space-2xs);
+  }
+  .kicker a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .kicker a:hover {
+    text-decoration: underline;
+  }
+  h1 {
+    margin-bottom: var(--space-xs);
+  }
+  .byline {
+    margin-bottom: var(--space-2xs);
+  }
+  .links {
+    margin-bottom: var(--space-l);
+  }
+  .abstract {
+    border-block: var(--rule-width) solid var(--rule);
+    padding-block: var(--space-s);
+    margin-bottom: var(--space-xl);
+  }
+  .abstract .label {
+    margin-bottom: var(--space-3xs);
+  }
+  .abstract p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Figures may run wider than the text column */
+  .body :global(.figure) {
+    counter-increment: figure;
+    max-width: var(--measure-wide);
+    margin-block: var(--space-l);
+  }
+  .body :global(.figure figcaption) {
+    max-width: var(--measure);
+    margin-top: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .body :global(.figure figcaption::before) {
+    content: 'Fig. ' counter(figure) ' — ';
+    color: var(--accent-2);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--meta-tracking);
+    font-size: 1.1em;
+  }
+</style>

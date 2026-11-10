@@ -1,0 +1,83 @@
+---
+import '@fontsource/stix-two-text/400.css';
+import '@fontsource/stix-two-text/400-italic.css';
+import '@fontsource/stix-two-text/600.css';
+import '@fontsource/stix-two-text/600-italic.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../site';
+import { hasPosts } from '../lib/content';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.author} · ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const showFeed = await hasPosts();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.author} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {showFeed && <link rel="alternate" type="application/rss+xml" title={`${SITE.name}: Writing`} href="/rss.xml" />}
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Apply a saved theme before first paint (no flash). -->
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="page">
+      <Header />
+      <main id="main">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>
+
+<style>
+  .page {
+    max-width: calc(var(--measure-wide) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  main {
+    padding-top: var(--space-2xl);
+  }
+  .skip-link {
+    position: absolute;
+    left: var(--gutter);
+    top: -10rem;
+    background: var(--paper);
+    padding: var(--space-2xs) var(--space-s);
+  }
+  .skip-link:focus {
+    top: var(--space-2xs);
+  }
+</style>

@@ -1,0 +1,45 @@
+---
+/** One-line "Currently reading · watching · listening to" from the shelf data. */
+import { getCollection } from 'astro:content';
+
+const verbs = { book: 'reading', film: 'watching', music: 'listening to' } as const;
+const order = ['book', 'film', 'music'] as const;
+
+const current = (await getCollection('shelf', ({ data }) => data.current)).sort(
+  (a, b) => order.indexOf(a.data.medium) - order.indexOf(b.data.medium),
+);
+// At most one item per medium
+const picks = order
+  .map((m) => current.find((e) => e.data.medium === m))
+  .filter((e) => e !== undefined);
+---
+
+{
+  picks.length > 0 && (
+    <p class="currently">
+      <span class="label">Currently</span>{' '}
+      {picks.map((e, i) => (
+        <>
+          {i > 0 && <span class="sep"> · </span>}
+          {verbs[e.data.medium]} <cite>{e.data.title}</cite>
+        </>
+      ))}
+      {' '}<a href="/shelf/" class="more">(the shelf)</a>
+    </p>
+  )
+}
+
+<style>
+  .currently {
+    color: var(--muted);
+  }
+  cite {
+    color: var(--ink);
+  }
+  .label {
+    margin-right: var(--space-3xs);
+  }
+  .more {
+    color: var(--muted);
+  }
+</style>

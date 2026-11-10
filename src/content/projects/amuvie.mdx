@@ -1,0 +1,72 @@
+---
+title: AMUvie
+abstract: >-
+  AMUvie is a film diary. You can browse a catalogue of films, keep a prioritised list of what you
+  want to watch, and log what you've seen with a rating, notes, and how many times you've watched
+  it. It's a PHP and MariaDB API with a React website on top.
+start: 2026-06-01
+end: 2026-07-31
+role: Started as a course project
+stack: [PHP, MariaDB, React, TypeScript]
+source: https://github.com/amuribe/AMUvie
+featured: true
+order: 2
+---
+
+import Figure from '../../components/Figure.astro';
+import completed from './amuvie/completedwatch.png';
+import browse from './amuvie/browse.png';
+
+## Why a film log
+
+I watch a lot of films, and I like keeping track of them: what I've seen, what I thought, and what I keep meaning to get to. So when a web development course asked for a database-backed API and then a front end for it, building my own film log was the obvious choice.
+
+<Figure
+  src={completed}
+  alt="The Completed Watch List page. Each film shows its poster, a rating out of ten, how many times it's been watched, first and last watch dates, and a notes panel. There Will Be Blood and 2001: A Space Odyssey are at the top, both rated 10 out of 10."
+  caption="The completed watchlist, sorted by rating. Yes, that note on 2001 is mine."
+/>
+
+## What it does
+
+- **Browse** a catalogue of films, search by title, and filter by genre.
+- **A to-watch list** where each film has a priority you can bump up or down, plus notes ("never seen it", "need to rewatch").
+- **A completed list** that records your rating, how many times you've watched something, and when you first and last saw it. Watching a film again updates its existing entry instead of adding a duplicate.
+- **Personal statistics** drawn from your history.
+- **Accounts:** you sign in to see your own lists, and nobody else can read or change them.
+
+<Figure
+  src={browse}
+  alt="The Browse page: a search bar with a genre filter set to Animation, showing 234 results as a grid of film posters with titles and ratings."
+  caption="Browsing the catalogue, filtered to animation."
+/>
+
+## How it was built
+
+The course split it into two assignments, which shaped the design.
+
+**Part one was the back end:** a REST API in PHP with a MariaDB database, returning JSON that any front end could use.
+
+**Part two was the front end:** a React and TypeScript site that uses that API, with a login page and routes that only signed-in users can reach.
+
+Building the API first, without a UI to lean on, forced me to think about the API's contract early: what each endpoint accepts, what it returns, and what errors look like.
+
+## What's next
+
+AMUvie works, but it has rough edges I want to fix. I'd like to let people add films that aren't in the catalogue, clean up the styling, and work through the issues that are still open. It's one of the projects I most want to keep improving, partly because I use it.
+
+## Technical notes
+
+*For anyone curious about the details.*
+
+**Database.** Eight tables: films, genres, production companies, the two link tables joining them, users, and one table each for the to-watch and completed lists. Foreign keys tie list entries to real users and films, and four indexes cover the columns the API filters and joins on most.
+
+**Safe queries.** Every query goes through PDO prepared statements, so user input is never pasted into SQL, which rules out SQL injection.
+
+**Ratings without race conditions.** Rating a film also updates that film's overall average. That happens inside a transaction that locks the film's row first (`SELECT … FOR UPDATE`), so two people rating at the same moment can't overwrite each other's changes, and a failure part-way through rolls everything back.
+
+**Authentication.** Passwords are stored as hashes and checked with PHP's `password_verify`. Signing in returns an API key, which the React app sends with each request in an `X-Api-Key` header; the API looks up which user the key belongs to before touching any list.[^keys]
+
+**Front end.** React Router loaders fetch each page's data before it renders, and a protected layout redirects signed-out visitors to the login page.
+
+[^keys]: A per-user API key is simpler than sessions or tokens, which suited the assignment, but it never expires. Short-lived tokens would be one of the first things I'd change.

@@ -1,0 +1,95 @@
+---
+title: Fretbored
+abstract: >-
+  Fretbored shows you every way to play a chord on a stringed instrument. There are plenty of
+  chord charts for guitar, but very few for banjo, mandolin, or guitars in other tunings. Type in
+  a chord and an instrument, and Fretbored draws the shapes you can play, easiest first.
+start: 2026-05-01
+role: Solo project
+stack: [Rust, WebAssembly (planned)]
+source: https://github.com/amuribe/fretbored-monorepo
+featured: true
+order: 1
+---
+
+import TerminalFigure from '../../components/TerminalFigure.astro';
+import mandolin from './fretbored/d-mandolin.ansi?raw';
+import ukulele from './fretbored/c-ukulele.ansi?raw';
+import guitar from './fretbored/cmaj7-guitar.ansi?raw';
+import capo from './fretbored/c-capo3-guitar.ansi?raw';
+import dropD from './fretbored/dm-dropd-guitar.ansi?raw';
+
+## Why I made it
+
+When I wanted to learn a chord, the tools I found almost always assumed a guitar in standard tuning. Change the instrument or the tuning and you're back to working it out by hand: which notes are in the chord, where those notes sit on each string, and which combinations a real hand can actually reach.
+
+That's a puzzle a computer is good at, so I started building one that works for any stringed instrument, as long as it knows the instrument's strings and tuning.
+
+<TerminalFigure
+  output={mandolin}
+  command="fretbored chord D --instrument mandolin/standard"
+  alt="A mandolin fretboard diagram for a D major chord, using two open strings and one note at the second fret. The lowest string is muted. The root note D is highlighted."
+  caption="A D major chord on a mandolin. Notes in the chord are highlighted, with the root, D, in gold."
+/>
+
+## What it does
+
+You give Fretbored a chord name, like `G7`, `Cmaj7` or `Gm7b5`, and an instrument. It works out which notes make up the chord, finds every place those notes appear on the neck, and then searches for combinations a hand can actually play. The results are ranked so the easiest shapes come first, and each one is drawn as a fretboard diagram in the terminal.
+
+It currently knows guitar (standard, drop D, E♭ standard and a full step down), bass, five-string banjo, mandolin and ukulele. Adding a new instrument or tuning is a small entry in a table.[^registry]
+
+<TerminalFigure
+  output={ukulele}
+  command="fretbored chord C --instrument ukulele/standard"
+  alt="A ukulele fretboard diagram for a C major chord: three strings ring open and the A string is fretted at the third fret, on C."
+  caption="The same tool on a ukulele: C major, three open strings and one finger."
+/>
+
+<TerminalFigure
+  output={guitar}
+  command="fretbored chord Cmaj7"
+  alt="A guitar fretboard diagram for C major seventh. The fifth string is fretted at the third fret on C, the fourth string is muted, and the rest ring open."
+  caption="And on a guitar in standard tuning, where most chord tools stop."
+/>
+
+Because it works from the tuning rather than from memorised chord charts, a different tuning is just a different starting point. Drop D, for example, lowers the guitar's thickest string from E to D, and Fretbored immediately finds shapes that use that new open D.
+
+<TerminalFigure
+  output={dropD}
+  command="fretbored chord Dm --instrument guitar/drop_d"
+  alt="A guitar fretboard diagram in drop D tuning for D minor. The two D strings and the A string ring open, and the high E string is fretted at the first fret, on F. The G and B strings are muted."
+  caption="D minor in drop D tuning. Both D strings ring open, so the chord gets a deep root."
+/>
+
+You can also tell it how far your hand can stretch, or where your capo is. With a capo, everything behind it is out of reach, so Fretbored greys that part of the neck out and only searches above it.
+
+<TerminalFigure
+  output={capo}
+  command="fretbored chord C --capo 3"
+  alt="A guitar fretboard diagram for C major with a capo on the third fret, drawn as a highlighted line. Frets behind the capo are greyed out. The chord uses the D, G and B strings at the fifth fret; the outer strings are muted."
+  caption="C major with a capo on the third fret. The capo is drawn in purple, and the neck behind it is greyed out."
+/>
+
+## Where it's going
+
+Fretbored is still early. It works, but there's plenty to refine: some rankings don't yet match what a player would pick first, and the diagrams don't handle every instrument's quirks. Right now it's a command-line tool. Next up:
+
+- **A chord identifier**, the reverse direction: give it the frets you're holding down and it suggests what chord you're playing.
+- **A web app.** The engine is written so it can be compiled to WebAssembly and run in the browser, with a clickable fretboard instead of terminal diagrams.
+- **Deeper theory:** inversions, slash chords, more scales and modes, and eventually voice leading, which means finding the smallest hand movement between one chord and the next.
+- Maybe **Python bindings**, so the engine could be used from other music projects.
+
+## Technical notes
+
+*For anyone curious about how it works under the hood.*
+
+**Chords are built, not looked up.** Rather than storing a list of every chord, the engine builds each one from a base quality (major, minor, diminished…) plus optional extensions (sevenths, ninths, alterations and so on). That's how it can understand symbols like `Gm7b5` without a special case for each.
+
+**Membership checks are a single bit operation.** A chord's notes are stored as a 12-bit mask, one bit per pitch class.[^bitmask] Checking whether a note on the fretboard belongs to the chord is then one bitwise AND, which keeps the search fast even on a full neck.
+
+**Finding playable shapes is a search problem.** The engine slides a window, as wide as the maximum hand stretch, along the neck. Inside each window it backtracks string by string, picking a fret or muting the string, and keeps the combinations that contain every note the chord needs. A small scoring function then ranks them by stretch, open strings and position on the neck.
+
+**Instrument data is compiled in.** Tunings and instrument shapes are static data in the binary rather than files read at runtime, so looking up an instrument costs nothing and there's nothing to parse.
+
+[^registry]: Each instrument is described by its string count, fret count and tuning. The five-string banjo needs one extra detail: its short fifth string starts partway up the neck.
+[^bitmask]: There are twelve pitch classes (C, C♯, D … B), so a whole chord fits in the lower 12 bits of a 16-bit integer. Membership is `mask & (1 << pitch_class) != 0`.

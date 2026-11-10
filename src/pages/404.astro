@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found">
+  <article class="prose">
+    <p class="label">Erratum</p>
+    <h1>This page does not exist.</h1>
+    <p class="muted">
+      The reference you followed points nowhere. The error is ours, not yours.
+    </p>
+    <p><a href="/">Return to the front page</a></p>
+  </article>
+</Base>
+
+<style>
+  h1 {
+    margin-bottom: var(--space-s);
+  }
+  .label {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-2xs);
+  }
+</style>

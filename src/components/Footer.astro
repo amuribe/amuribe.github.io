@@ -1,0 +1,43 @@
+---
+import { SITE } from '../site';
+import { hasPosts } from '../lib/content';
+
+const year = new Date().getFullYear();
+const links = [
+  { href: `mailto:${SITE.email}`, label: 'Email' },
+  { href: SITE.github, label: 'GitHub' },
+  { href: SITE.linkedin, label: 'LinkedIn' },
+  // RSS appears once there's something to subscribe to
+  { href: (await hasPosts()) ? '/rss.xml' : '', label: 'RSS' },
+].filter((l) => l.href);
+---
+
+<footer class="site-footer meta">
+  <span>© {year} {SITE.author}</span>
+  {
+    links.map(({ href, label }) => (
+      <>
+        <span aria-hidden="true">·</span>
+        <a href={href}>{label}</a>
+      </>
+    ))
+  }
+</footer>
+
+<style>
+  .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-2xs);
+    margin-top: var(--space-3xl);
+    padding-block: var(--space-s) var(--space-l);
+    border-top: var(--rule-width) solid var(--rule);
+    font-size: var(--step-0);
+  }
+  a {
+    color: var(--muted);
+  }
+  a:hover {
+    color: var(--accent);
+  }
+</style>

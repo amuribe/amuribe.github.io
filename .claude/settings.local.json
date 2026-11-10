@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -o '<sup>.\\\\{0,200\\\\}' dist/styleguide/index.html)",
+      "Bash(grep -o '<section[^>]*footnotes.\\\\{0,400\\\\}' dist/styleguide/index.html)"
+    ]
+  }
+}

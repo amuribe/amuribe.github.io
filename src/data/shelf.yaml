@@ -1,0 +1,87 @@
+# The Shelf: books, films and music, cited Chicago-style on /shelf.
+#
+# Fields:
+#   id        unique, lowercase-with-dashes
+#   medium    book | film | music
+#   title     exact title (italicised automatically)
+#   creator   "Last, First" for people (author, director, artist); bands as written ("The Microphones")
+#   year      original publication / release year
+#   note      optional: one line in your own words
+#   current   optional: true puts it in the home page "Currently" line (one per medium)
+#
+# Entries are sorted alphabetically by creator on the page, like a bibliography.
+
+# ---------- Books ----------
+- id: the-magic-mountain
+  medium: book
+  title: The Magic Mountain
+  creator: Mann, Thomas
+  year: 1924
+
+- id: j-r
+  medium: book
+  title: J R
+  creator: Gaddis, William
+  year: 1975
+
+- id: demon-copperhead
+  medium: book
+  title: Demon Copperhead
+  creator: Kingsolver, Barbara
+  year: 2022
+
+- id: anna-karenina
+  medium: book
+  title: Anna Karenina
+  creator: Tolstoy, Leo
+  year: 1878
+
+# ---------- Films ----------
+- id: 2001-a-space-odyssey
+  medium: film
+  title: "2001: A Space Odyssey"
+  creator: Kubrick, Stanley
+  year: 1968
+
+- id: the-wicker-man
+  medium: film
+  title: The Wicker Man
+  creator: Hardy, Robin
+  year: 1973
+
+- id: princess-mononoke
+  medium: film
+  title: Princess Mononoke
+  creator: Miyazaki, Hayao
+  year: 1997
+
+- id: synecdoche-new-york
+  medium: film
+  title: Synecdoche, New York
+  creator: Kaufman, Charlie
+  year: 2008
+
+# ---------- Music (albums) ----------
+- id: the-glow-pt-2
+  medium: music
+  title: The Glow Pt. 2
+  creator: The Microphones
+  year: 2001
+
+- id: the-age-of-adz
+  medium: music
+  title: The Age of Adz
+  creator: Stevens, Sufjan
+  year: 2010
+
+- id: figure-8
+  medium: music
+  title: Figure 8
+  creator: Smith, Elliott
+  year: 2000
+
+- id: out-to-lunch
+  medium: music
+  title: Out to Lunch!
+  creator: Dolphy, Eric
+  year: 1964

@@ -1,0 +1,27 @@
+---
+/** Simple long-form page: used by Markdown pages via `layout:` frontmatter. */
+import Base from './Base.astro';
+
+interface Props {
+  frontmatter: { title: string; description?: string };
+}
+const { frontmatter } = Astro.props;
+---
+
+<Base title={frontmatter.title} description={frontmatter.description}>
+  <article class="prose">
+    <h1>{frontmatter.title}</h1>
+    {frontmatter.description && <p class="dek muted">{frontmatter.description}</p>}
+    <slot />
+  </article>
+</Base>
+
+<style>
+  h1 {
+    margin-bottom: var(--space-2xs);
+  }
+  .dek {
+    font-style: italic;
+    margin-bottom: var(--space-xl);
+  }
+</style>

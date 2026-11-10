@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Type Specimens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script>
+  document.documentElement.dataset.palette = 'a';
+  try {
+    const t = localStorage.getItem('specimen-theme'); if (t) document.documentElement.dataset.theme = t;
+    const p = localStorage.getItem('specimen-palette');
+    if (p === 'draft') delete document.documentElement.dataset.palette; else if (p) document.documentElement.dataset.palette = p;
+  } catch (e) {}
+</script>
+<style>
+  :root {
+    --paper: #FBFAF7; --ink: #1C1B18; --muted: #5F5B53; --rule: #D8D4CA;
+    --accent: #1F4E8C; --code-bg: #F1EFEA;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #171614; --ink: #ECE8E0; --muted: #A6A096; --rule: #3B3833;
+      --accent: #93B4E6; --code-bg: #201F1C; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #171614; --ink: #ECE8E0; --muted: #A6A096; --rule: #3B3833;
+    --accent: #93B4E6; --code-bg: #201F1C; color-scheme: dark;
+  }
+  :root { --accent-2: var(--accent); --tint: #DCE6F3; }
+
+  /* ---- Blue-grey neutrals shared by palettes A and B ---- */
+  :root[data-palette] {
+    --paper: #F5F7F9; --ink: #1A1F27; --muted: #576272; --rule: #D3D9E1; --code-bg: #EAEEF2;
+  }
+  /* A: emerald lead, lilac support */
+  :root[data-palette="a"] { --accent: #0A7352; --accent-2: #6E4FA3; --tint: #E7DEF5; }
+  /* B: lilac lead, emerald support */
+  :root[data-palette="b"] { --accent: #6E4FA3; --accent-2: #0A7352; --tint: #D6EFE5; }
+
+  @media (prefers-color-scheme: dark) {
+    :root[data-palette]:not([data-theme="light"]) {
+      --paper: #13161B; --ink: #E4E8EE; --muted: #98A3B3; --rule: #2F3641; --code-bg: #1B2027; color-scheme: dark;
+    }
+    :root[data-palette="a"]:not([data-theme="light"]) { --accent: #4CCB9A; --accent-2: #C3AEEB; --tint: #3A3150; }
+    :root[data-palette="b"]:not([data-theme="light"]) { --accent: #C3AEEB; --accent-2: #4CCB9A; --tint: #1F3A31; }
+  }
+  :root[data-palette][data-theme="dark"] {
+    --paper: #13161B; --ink: #E4E8EE; --muted: #98A3B3; --rule: #2F3641; --code-bg: #1B2027; color-scheme: dark;
+  }
+  :root[data-palette="a"][data-theme="dark"] { --accent: #4CCB9A; --accent-2: #C3AEEB; --tint: #3A3150; }
+  :root[data-palette="b"][data-theme="dark"] { --accent: #C3AEEB; --accent-2: #4CCB9A; --tint: #1F3A31; }
+
+  ::selection { background: var(--tint); color: var(--ink); }
+  .swatches { display: flex; flex-wrap: wrap; gap: .5rem 1rem; font-family: var(--font-mono); font-size: .68rem; color: var(--muted); margin: 1rem 0 0; }
+  .swatches span::before { content: ""; display: inline-block; width: .9em; height: .9em; margin-right: .35em; vertical-align: -.1em; border: 1px solid var(--rule); background: var(--c); }
+
+  * { box-sizing: border-box; }
+  html { font-size: 112.5%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Times New Roman", Times, serif; line-height: 1.55;
+  }
+  .wrap { max-width: 46rem; margin: 0 auto; padding: 2rem 16px 4rem; }
+  header.top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap;
+    border-bottom: 1px solid var(--rule); padding-bottom: .75rem; margin-bottom: 1rem; }
+  header.top h1 { font-size: 1.25rem; font-weight: 600; margin: 0; }
+  .controls { display: flex; gap: .75rem; flex-wrap: wrap; align-items: baseline; font-size: .8rem; }
+  button, select {
+    font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--rule);
+    padding: .2rem .6rem; cursor: pointer;
+  }
+  button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .intro { color: var(--muted); font-size: .9rem; }
+  nav.jump { font-size: .8rem; display: flex; flex-wrap: wrap; gap: .25rem 1rem; margin: 1rem 0 0; }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: .15em; }
+
+  section.specimen { border-top: 1px solid var(--rule); padding-top: 2rem; margin-top: 3rem; counter-reset: fig; }
+  .label {
+    font-family: var(--font-mono); font-size: .7rem; color: var(--muted); letter-spacing: .02em;
+    display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+  }
+  .label strong { color: var(--ink); font-weight: 400; }
+
+  .sp { font-variant-numeric: oldstyle-nums proportional-nums; }
+  .sp .name { font-size: 2.441rem; line-height: 1.1; margin: 0 0 .25rem; font-weight: 400; }
+  .sp .tag { font-style: italic; color: var(--muted); margin: 0 0 2rem; }
+  .sp h2 { font-size: 1.953rem; line-height: 1.2; font-weight: 600; margin: 0 0 .4rem; }
+  .sp .byline { font-size: .8rem; color: var(--muted); margin: 0 0 1.5rem; }
+  .sp.meta-caps .byline { font-variant-caps: all-small-caps; letter-spacing: .04em; font-size: .95rem; }
+  .sp.meta-mono .byline { font-family: var(--font-mono); font-size: .72rem; }
+  .sp .abstract { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: .9rem 0; margin: 0 0 1.75rem; }
+  .sc { font-variant-caps: all-small-caps; letter-spacing: .04em; color: var(--muted); }
+  .sp .abstract p { margin: .25rem 0 0; }
+  .sp h3 { font-size: 1.25rem; font-weight: 600; margin: 1.75rem 0 .4rem; }
+  .sp p { margin: 0 0 1rem; max-width: 66ch; }
+  sup.note { color: var(--accent); font-size: .7em; line-height: 0; }
+  .sidenote { font-size: .8rem; color: var(--muted); border-left: 1px solid var(--rule); padding-left: .75rem; margin: 0 0 1rem; }
+  figure { margin: 1.75rem 0; counter-increment: fig; }
+  .fake-shot {
+    aspect-ratio: 16 / 7; border: 1px solid var(--rule); background:
+      repeating-linear-gradient(0deg, transparent 0 22px, var(--rule) 22px 23px), var(--code-bg);
+    display: grid; place-items: center; color: var(--muted); font-family: var(--font-mono); font-size: .7rem;
+  }
+  figcaption { font-size: .8rem; color: var(--muted); margin-top: .5rem; }
+  .abstract .sc { color: var(--accent-2); }
+  figcaption::before { content: "Fig. " counter(fig) " — "; color: var(--accent-2); font-variant-caps: all-small-caps; letter-spacing: .04em; font-size: 1.1em; }
+  code { font-family: var(--font-mono); font-size: .82em; background: var(--code-bg); padding: .05em .3em; }
+  .glyphs { font-size: 1.25rem; color: var(--muted); letter-spacing: .02em; margin-top: 1.5rem; word-break: break-word; }
+  .glyphs .num { font-variant-numeric: lining-nums tabular-nums; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>AMUdev — type specimens</h1>
+    <div class="controls">
+      <label>Palette
+        <select id="palette">
+          <option value="a">A · Emerald lead, lilac support</option>
+          <option value="b">B · Lilac lead, emerald support</option>
+          <option value="draft">Original draft (warm + ink-blue)</option>
+        </select>
+      </label>
+      <label>Metadata style
+        <select id="meta">
+          <option value="meta-caps">Small caps</option>
+          <option value="meta-mono">Mono</option>
+        </select>
+      </label>
+      <button id="theme" type="button" aria-pressed="false">Toggle dark</button>
+    </div>
+  </header>
+  <p class="intro">The same project page is set in five serifs. Colors are the draft paper/ink tokens with the <em>placeholder</em> ink-blue accent. Compare body readability, italics, numbers, and small caps, then record your choice in <code>design-system.md</code> §7.</p>
+  <p class="swatches" aria-label="Current palette">
+    <span style="--c: var(--paper)">paper</span><span style="--c: var(--ink)">ink</span><span style="--c: var(--muted)">muted</span>
+    <span style="--c: var(--accent)">accent (links)</span><span style="--c: var(--accent-2)">accent-2 (labels, fig. numbers)</span><span style="--c: var(--tint)">tint (selection)</span>
+  </p>
+  <p class="intro">Try selecting some text to see the tint. Every sample link is <a href="#">styled like this</a>.</p>
+  <nav class="jump" aria-label="Jump to specimen"></nav>
+
+  <template id="sample">
+    <p class="name">Alex McPherson Uribe</p>
+    <p class="tag">Student engineer. Builds things, then explains them.</p>
+    <h2>Campus Printer Finder</h2>
+    <p class="byline">Sept 2025 – Dec 2025 · Backend developer · Rust, Axum, PostgreSQL · Live demo · Source</p>
+    <div class="abstract">
+      <span class="sc">Abstract</span>
+      <p>Students were walking between buildings to find a working printer. I built a small web app that shows which campus printers are free right now. Within the first month, 1,240 students used it.</p>
+    </div>
+    <figure>
+      <div class="fake-shot" role="img" aria-label="Placeholder screenshot">screenshot</div>
+      <figcaption>The map view on a phone, showing three free printers nearby.</figcaption>
+    </figure>
+    <h3>Problem</h3>
+    <p>The university has 38 printers across 14 buildings, and roughly a third are offline on any given day. The only way to know was to walk there.<sup class="note">1</sup> I wanted the answer to fit on a phone screen in under two seconds.</p>
+    <p class="sidenote"><sup class="note">1</sup> The print server did expose status, but only through an undocumented SNMP endpoint. See <em>Technical notes</em>.</p>
+    <h3>Approach</h3>
+    <p>A Rust service polls each printer every 30 seconds and stores its state in <code>printer_status</code>. The front end is a single static page, which keeps it fast on campus Wi-Fi.</p>
+    <p class="glyphs">Aa Bb Gg Qq Rr — <em>Aa Gg Qq ffi fl</em> — 0123456789 — <span class="num">0123456789</span> — &amp; ? ! “ ” ‘ ’</p>
+  </template>
+</div>
+
+<script>
+  const fonts = [
+    { name: 'STIX Two Text', stack: '"STIX Two Text", "Times New Roman", serif', note: 'Times-like · scientific publishing' },
+    { name: 'Source Serif 4', stack: '"Source Serif 4", "Times New Roman", serif', note: 'sturdy · screen-first · optical sizes' },
+    { name: 'Newsreader', stack: 'Newsreader, "Times New Roman", serif', note: 'editorial · warmer · optical sizes' },
+    { name: 'EB Garamond', stack: '"EB Garamond", "Times New Roman", serif', note: 'classical · bookish · lighter' },
+    { name: 'Times New Roman (system)', stack: '"Times New Roman", Times, serif', note: 'fallback only · not on most Android/Linux' },
+  ];
+  const wrap = document.querySelector('.wrap');
+  const tpl = document.getElementById('sample');
+  const jump = document.querySelector('nav.jump');
+  fonts.forEach((f, i) => {
+    const id = 'f' + i;
+    const s = document.createElement('section');
+    s.className = 'specimen'; s.id = id;
+    s.innerHTML = `<div class="label"><strong>${i + 1}. ${f.name}</strong><span>${f.note}</span></div>`;
+    const body = document.createElement('div');
+    body.className = 'sp meta-caps';
+    body.style.fontFamily = f.stack;
+    body.appendChild(tpl.content.cloneNode(true));
+    s.appendChild(body);
+    wrap.appendChild(s);
+    const a = document.createElement('a'); a.href = '#' + id; a.textContent = f.name; jump.appendChild(a);
+  });
+
+  document.getElementById('meta').addEventListener('change', e => {
+    document.querySelectorAll('.sp').forEach(el => {
+      el.classList.remove('meta-caps', 'meta-mono'); el.classList.add(e.target.value);
+    });
+  });
+
+  const pal = document.getElementById('palette');
+  pal.value = document.documentElement.dataset.palette || 'draft';
+  pal.addEventListener('change', e => {
+    const v = e.target.value;
+    if (v === 'draft') delete document.documentElement.dataset.palette; else document.documentElement.dataset.palette = v;
+    try { localStorage.setItem('specimen-palette', v); } catch (err) {}
+  });
+
+  const btn = document.getElementById('theme');
+  const isDark = () => {
+    const t = document.documentElement.dataset.theme;
+    return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  };
+  const sync = () => { btn.textContent = isDark() ? 'Switch to light' : 'Switch to dark'; btn.setAttribute('aria-pressed', String(isDark())); };
+  btn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('specimen-theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+</script>
+</body>
+</html>

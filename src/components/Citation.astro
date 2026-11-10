@@ -1,0 +1,55 @@
+---
+/**
+ * One Shelf entry, formatted Chicago-style:
+ *   Book:  Mann, Thomas. The Magic Mountain. 1924.
+ *   Film:  Kubrick, Stanley, dir. 2001: A Space Odyssey. 1968.
+ *   Music: Smith, Elliott. Figure 8. 2000.
+ */
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'shelf'>;
+}
+const { medium, title, creator, year, note, link } = Astro.props.entry.data;
+
+// Chicago puts a period after each element, unless it already ends in . ? or !
+const end = (s: string) => (/[.?!]$/.test(s) ? '' : '.');
+const who = medium === 'film' ? `${creator}, dir` : creator;
+---
+
+<li class="citation">
+  <span class="cite-line">
+    {who}{end(who)}{' '}
+    {link ? (
+      <a href={link}><cite>{title}</cite></a>
+    ) : (
+      <cite>{title}</cite>
+    )}{end(title)}{' '}
+    <span class="year">{year}.</span>
+  </span>
+  {note && <span class="note">{note}</span>}
+</li>
+
+<style>
+  .citation {
+    /* hanging indent, as in a printed bibliography */
+    padding-left: 2em;
+    text-indent: -2em;
+  }
+  .citation + .citation {
+    margin-top: var(--space-xs);
+  }
+  cite {
+    font-style: italic;
+  }
+  .year {
+    font-variant-numeric: oldstyle-nums;
+  }
+  .note {
+    display: block;
+    text-indent: 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+    margin-top: var(--space-3xs);
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+import { getCollection, render } from 'astro:content';
+import Paper from '../../layouts/Paper.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => !data.draft);
+  return projects.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Paper entry={entry}>
+  <Content />
+</Paper>

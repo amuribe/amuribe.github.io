@@ -1,0 +1,129 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
+import { SITE } from '../site';
+import { AVAILABILITY, EDUCATION, EXPERIENCE, RESUME_PDF, SKILLS } from '../data/resume';
+---
+
+<Base
+  title="About"
+  description="About Alex McPherson Uribe, a computer science co-op student at Trent University."
+>
+  <article class="about">
+    <header>
+      <h1>About</h1>
+      <p class="availability">{AVAILABILITY}</p>
+      <p class="links">
+        <a href={RESUME_PDF}>Résumé (PDF)</a>
+        <span aria-hidden="true" class="muted"> · </span>
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        <span aria-hidden="true" class="muted"> · </span>
+        <a href={SITE.github}>GitHub</a>
+      </p>
+    </header>
+
+    <!-- DRAFT BIO: rewrite freely. -->
+    <section class="bio prose" aria-label="Bio">
+      <p>
+        I'm Alex, a computer science co-op student at Trent University in Peterborough, Ontario.
+        I'm drawn to low-level systems programming, and I'm happiest when a project connects to
+        something I already care about, which is usually music.
+      </p>
+      <p>
+        I've taught guitar and music theory since 2022, and I write and compose a little when I
+        find the time. Outside of that I watch a lot of film, especially foreign and arthouse
+        cinema, listen to music from just about every genre, read long novels slowly, and have
+        recently (very much as a beginner) started birding. You can see some favourites on the{' '}
+        <a href="/shelf/">Shelf</a>.
+      </p>
+      <p>
+        Someday I'd love to work in music technology. In the meantime, I'm looking forward to
+        learning on the job, wherever that turns out to be.
+      </p>
+    </section>
+
+    <section aria-labelledby="education">
+      <h2 id="education" class="section-label label">Education</h2>
+      <Timeline items={EDUCATION} />
+    </section>
+
+    <section aria-labelledby="experience">
+      <h2 id="experience" class="section-label label">Experience</h2>
+      <Timeline items={EXPERIENCE} />
+    </section>
+
+    <section aria-labelledby="projects">
+      <h2 id="projects" class="section-label label">Projects</h2>
+      <p>
+        Write-ups of what I've built, including Fretbored, a chord-voicing engine for string
+        instruments, are on the <a href="/projects/">Projects</a> page.
+      </p>
+    </section>
+
+    <section aria-labelledby="skills">
+      <h2 id="skills" class="section-label label">Skills</h2>
+      <dl class="skills">
+        {
+          SKILLS.map(({ label, items }) => (
+            <div>
+              <dt class="meta">{label}</dt>
+              <dd>{items.join(', ')}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .about {
+    max-width: var(--measure);
+  }
+  h1 {
+    margin-bottom: var(--space-xs);
+  }
+  .availability {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-2xs);
+  }
+  .links {
+    margin-bottom: var(--space-xl);
+  }
+  .bio {
+    margin-bottom: var(--space-xl);
+  }
+  section + section {
+    margin-top: var(--space-xl);
+  }
+  .section-label {
+    font-size: var(--step-1);
+    font-weight: 400;
+    padding-bottom: var(--space-2xs);
+    margin-bottom: var(--space-s);
+    border-bottom: var(--rule-width) solid var(--rule);
+  }
+  .skills {
+    margin: 0;
+  }
+  .skills > div {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: var(--space-s);
+  }
+  .skills > div + div {
+    margin-top: var(--space-2xs);
+  }
+  dt {
+    margin: 0;
+  }
+  dd {
+    margin: 0;
+  }
+  @media (max-width: 36rem) {
+    .skills > div {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>

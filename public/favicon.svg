@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Placeholder favicon until the custom logo exists. -->
+  <style>
+    rect { fill: #F5F7F9; }
+    text { fill: #0A7352; }
+    @media (prefers-color-scheme: dark) {
+      rect { fill: #13161B; }
+      text { fill: #4CCB9A; }
+    }
+  </style>
+  <rect width="32" height="32" rx="3"/>
+  <text x="16" y="24" text-anchor="middle" font-family="'Times New Roman', Times, serif" font-size="24" font-weight="600">A</text>
+</svg>

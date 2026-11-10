@@ -1,0 +1,64 @@
+---
+/**
+ * Light/dark toggle. The page follows the OS setting until this is pressed;
+ * the choice is then remembered (see the inline script in Base.astro, which
+ * applies it before first paint so there is no flash).
+ */
+---
+
+<button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
+  <span class="visually-hidden">Dark theme</span>
+  <span aria-hidden="true" class="glyph"></span>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+  const isDark = () =>
+    root.dataset.theme ? root.dataset.theme === 'dark' : media.matches;
+
+  function sync() {
+    for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+      btn.setAttribute('aria-pressed', String(isDark()));
+      btn.title = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+    }
+  }
+
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+    btn.addEventListener('click', () => {
+      const next = isDark() ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {
+        /* storage unavailable: the choice lasts for this page only */
+      }
+      sync();
+    });
+  }
+  media.addEventListener('change', sync);
+  sync();
+</script>
+
+<style>
+  .theme-toggle {
+    font: inherit;
+    font-size: var(--step-0);
+    line-height: 1;
+    color: var(--muted);
+    background: none;
+    border: 0;
+    padding: var(--space-3xs);
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    color: var(--ink);
+  }
+  /* Glyphs set in the serif, not an icon font */
+  .glyph::before {
+    content: "☾";
+  }
+  .theme-toggle[aria-pressed="true"] .glyph::before {
+    content: "☀";
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+/**
+ * A numbered figure showing real terminal output, colors included.
+ * Pass raw output captured with ANSI codes (import it with `?raw`).
+ *
+ *   import banjo from './fretbored/g7-banjo.ansi?raw';
+ *   <TerminalFigure output={banjo} command="fretbored chord G7 -i banjo/standard"
+ *     alt="…" caption="…" />
+ */
+import { ansiToHtml } from '../lib/ansi';
+
+interface Props {
+  output: string;
+  /** Shown as the prompt line above the output. */
+  command?: string;
+  /** Text description for screen readers. Describe what the diagram shows. */
+  alt: string;
+  caption: string;
+}
+
+const { output, command, alt, caption } = Astro.props;
+const html = ansiToHtml(output.replace(/\s+$/, ''));
+---
+
+<figure class="figure terminal-figure">
+  <div class="terminal" role="img" aria-label={alt}>
+    {command && <pre class="prompt" aria-hidden="true"><span class="ps">$</span> {command}</pre>}
+    <pre class="output" aria-hidden="true" set:html={html} />
+  </div>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<style>
+  /*
+   * The terminal panel stays dark in both site themes, like the real thing,
+   * so the CLI's own colors read the way they do in a terminal.
+   */
+  .terminal {
+    --term-bg: #13161b;
+    --term-fg: #d5dae1;
+    background: var(--term-bg);
+    color: var(--term-fg);
+    border: var(--rule-width) solid var(--rule);
+    padding: var(--space-s);
+    overflow-x: auto;
+  }
+  pre {
+    margin: 0;
+    padding: 0;
+    background: none;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    overflow: visible;
+  }
+  .prompt {
+    color: #98a3b3;
+    margin-bottom: var(--space-2xs);
+  }
+  .ps {
+    color: #4ccb9a;
+  }
+
+  /* ANSI palette: tuned for the dark panel, all ≥ 4.5:1 except intentionally dim lines */
+  .output :global(.ansi-cyan),
+  .output :global(.ansi-bright-cyan) { color: #5fd3e6; }
+  .output :global(.ansi-yellow),
+  .output :global(.ansi-bright-yellow) { color: #f2c94c; }
+  .output :global(.ansi-magenta),
+  .output :global(.ansi-bright-magenta) { color: #c3aeeb; }
+  .output :global(.ansi-green),
+  .output :global(.ansi-bright-green) { color: #4ccb9a; }
+  .output :global(.ansi-red),
+  .output :global(.ansi-bright-red) { color: #f28b82; }
+  .output :global(.ansi-blue),
+  .output :global(.ansi-bright-blue) { color: #8ab4f8; }
+  .output :global(.ansi-white) { color: #d5dae1; }
+  .output :global(.ansi-bright-white) { color: #ffffff; }
+  .output :global(.ansi-bright-black) { color: #6b7686; }
+  .output :global(.ansi-bold) { font-weight: 600; }
+  .output :global(.ansi-dim) { opacity: 0.6; }
+</style>
